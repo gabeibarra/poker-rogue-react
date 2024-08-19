@@ -1,38 +1,138 @@
-.App {
-  text-align: center;
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #2e8b57;
+    color: white;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+#game-container {
   display: flex;
-  flex-direction: column;
+    text-align: center;
+}
+
+#left-panel {
+    background-color: #333;
+    border: 3px solid #ff4500;
+    padding: 20px;
+    border-radius: 10px;
+    margin-right: 20px;
+    min-width: 200px;
+}
+
+#left-panel button {
+    background-color: #e63946;
+    color: white;
+    border: 4px solid white;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-bottom: 15px;
+    font-size: 16px;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 0 #c31d33, 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#left-panel button:disabled {
+    background-color: #555;
+    border-color: #999;
+    cursor: not-allowed;
+    box-shadow: 0 4px 0 #444, 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+#left-panel button:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #c31d33, 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+#round-info, #hands-remaining {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+
+#player-hand {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    margin: 20px 0;
 }
 
-.App-link {
-  color: #61dafb;
+.card {
+    display: inline-block;
+    margin: 0 5px;
+    width: 100px;
+    height: 150px;
+    background-size: cover;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.card.selected {
+    transform: translateY(-32px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
 }
+
+.result {
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+
+#card-stack-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    text-align: center;
+}
+
+#deck-count {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#card-stack {
+    width: 80px;
+    height: 120px;
+    background-image: url('/public/images/card-back2.png'); /* Replace with your card back image path */
+    background-size: cover;
+    box-shadow: 0 8px 0 #333, 0 0 20px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    position: relative;
+}
+
+#card-stack::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 80px;
+    height: 120px;
+    background-image: url('/public/images/card-back2.png'); /* Replace with your card back image path */
+    background-size: cover;
+    transform: translateY(10px);
+    z-index: -1;
+}
+
+#card-stack::after {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 80px;
+    height: 120px;
+    background-image: url('/public/images/card-back2.png'); /* Replace with your card back image path */
+    background-size: cover;
+    transform: translateY(20px);
+    z-index: -2;
+}
+

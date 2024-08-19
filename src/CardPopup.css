@@ -1,0 +1,58 @@
+/* CardPopup.css */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;                                                                                                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);                                                                                        overflow: auto;                                                                                                              }                                                                                                                                                                                                                                                                 .popup-close {                                                                                                                       background: #f44336;                                                                                                             color: white;                                                                                                                    border: none;                                                                                                                    border-radius: 5px;                                                                                                              padding: 10px;                                                                                                                   cursor: pointer;                                                                                                                 font-size: 16px;                                                                                                                 float: right;                                                                                                                }                                                                                                                                                                                                                                                                 .suit-group {                                                                                                                        margin-bottom: 20px;                                                                                                         }                                                                                                                                                                                                                                                                 .suit-group h3 {                                                                                                                     margin-bottom: 10px;                                                                                                             font-size: 18px;                                                                                                             }                                                                                                                                                                                                                                                                 .card-grid {                                                                                                                         display: grid;                                                                                                                   grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));                                                                     gap: 10px;                                                                                                                   }             .cards-remaining-popup-card {
+    width: 48px;
+    height: 72px;
+    background-size: cover;
+    background-position: center;
+}
+
+.popup-close {
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    float: right;
+}
+
+.suit-group {
+    margin-bottom: 20px;
+}
+
+.suit-group h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 10px;
+}
+
+.cards-remaining-popup-card {
+    width: 48px;
+    height: 72px;
+    background-size: cover;
+    background-position: center;
+}
