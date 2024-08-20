@@ -22,15 +22,15 @@ const CardStack = ({ deckCount, onClick }) => (
 const App = () => {
   const {
     deck,
-    playerHand,
-    discardRounds,
+    discardAndDeal,
+    discardsRemaining,
+    handResult,
     handsRemaining,
     isDealing,
-    dealCards,
+    playerHand,
+    score,
+    submitHand,
     toggleCardSelection,
-    discardAndDeal,
-    maxDiscardRounds,
-    evaluateHand,
   } = useGameState();
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -42,7 +42,7 @@ const App = () => {
         key={index}
         index={index}
         isDealing={isDealing}
-        isSelected={card.selected}
+        isSelected={card.isSelected}
         onClick={() => toggleCardSelection(index)}
       />
     ))
@@ -51,23 +51,26 @@ const App = () => {
   return (
     <div id="game-container">
       <div id="left-panel">
-        <button onClick={dealCards} disabled={handsRemaining <= 0}>
-          Deal Cards
-        </button>
-        <button onClick={discardAndDeal} disabled={discardRounds >= maxDiscardRounds || handsRemaining <= 0}>
+        <h1>Score: {score}</h1>
+        <h3>Discards Remaining: {discardsRemaining}</h3>
+        <button onClick={discardAndDeal} disabled={discardsRemaining === 0 || !playerHand.some(c => c.isSelected)}>
           Discard Selected Cards
         </button>
-        <div id="round-info">Round: {discardRounds + 1} of {maxDiscardRounds}</div>
         <div id="hands-remaining">
           {handsRemaining > 0 ? `Hands Remaining: ${handsRemaining}` : "Game Over"}
         </div>
       </div>
-      <div id="player-hand">
-        {renderHand()}
+      <div className='player-hand-container'>
+        {handResult && (
+          <div className="result neon-text">Hand Type: {handResult}</div>
+        )}
+        <div id="player-hand">
+          {renderHand()}
+        </div>
+        <button onClick={submitHand} disabled={handsRemaining <= 0 || !playerHand.some(c => c.isSelected)}>
+          Submit Hand
+        </button>
       </div>
-      {discardRounds === maxDiscardRounds && (
-        <div className="result">Final Hand: {evaluateHand(playerHand)}</div>
-      )}
       <CardStack deckCount={deck.length} onClick={() => setIsPopupOpen(true)} />
       <CardPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} remainingDeck={deck} />
     </div>

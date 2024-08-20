@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { DEFAULT_DISCARD_ROUNDS, DEFAULT_HAND_ROUNDS, INITIAL_DRAW_COUNT } from "../constants/defaults";
 
 // Constants for suits and ranks
 const suits = ["spades", "hearts", "diamonds", "clubs"];
@@ -69,61 +70,93 @@ const evaluateHand = (hand) => {
 };
 
 export const useGameState = () => {
+    const [isInit, setInit] = useState(false)
+    const [score, setScore] = useState(0)
     const [deck, setDeck] = useState([]);
     const [playerHand, setPlayerHand] = useState([]);
-    const [discardRounds, setDiscardRounds] = useState(0);
-    const [handsRemaining, setHandsRemaining] = useState(4);
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [discardsRemaining, setDiscardsRemaining] = useState(DEFAULT_DISCARD_ROUNDS);
+    const [handsRemaining, setHandsRemaining] = useState(DEFAULT_HAND_ROUNDS);
     const [isDealing, setIsDealing] = useState(false);
+    const [handResult, setHandResult] = useState('')
     const maxDiscardRounds = 3;
 
     useEffect(() => {
         setDeck(createDeck());
+
     }, []);
 
-    const dealCards = () => {
-        if (handsRemaining > 0) {
-            setDeck(createDeck());
-            setPlayerHand(deck.slice(0, 5).map(card => ({ ...card, selected: false })));
-            setDiscardRounds(0);
-            setHandsRemaining(handsRemaining - 1);
-
-            // Trigger dealing animation
-            setIsDealing(true);
-            setTimeout(() => setIsDealing(false), 1000); // Assuming the animation lasts 1 second
+    // Start the game:
+    useEffect(() => {
+        if (isInit || !deck.length) {
+            return
         }
-    };
+
+        setInit(true)
+        dealCards()
+    }, [deck, isInit]);
+
+    const dealCards = () => {
+        if (handsRemaining === 0) {
+            return
+        }
+
+        const cardsDrawn = []
+        for (let i = 0; i < INITIAL_DRAW_COUNT; i++) {
+            // TODO, reshuffle discard pile:
+            if (deck.length === 0) {
+                break
+            }
+
+            // Zero is the bottom of the pile:
+            cardsDrawn.push(deck.pop())
+        }
+
+        setPlayerHand(cardsDrawn.map(card => ({ ...card, isSelected: false })));
+        setHandsRemaining(handsRemaining - 1);
+        setDeck(deck)
+
+        // Trigger dealing animation
+        setIsDealing(true);
+        setTimeout(() => setIsDealing(false), 2000); // Assuming the animation lasts 1 second
+    }
+
+    const submitHand = () => {
+        setHandResult(evaluateHand(playerHand.filter(card => card.isSelected)))
+
+        setTimeout(() => {
+            setHandResult('')
+            dealCards()
+        }, 4000)
+    }
 
     const toggleCardSelection = (index) => {
         setPlayerHand(prevHand =>
-            prevHand.map((card, i) => (i === index ? { ...card, selected: !card.selected } : card))
+            prevHand.map((card, i) => (i === index ? { ...card, isSelected: !card.isSelected } : card))
         );
     };
 
     const discardAndDeal = () => {
-        if (discardRounds >= maxDiscardRounds) return;
+        if (discardsRemaining === 0) {
+            return;
+        }
 
-        const newHand = playerHand.map(card => (card.selected ? deck.pop() : card));
+        const newHand = playerHand.map(card => (card.isSelected ? deck.pop() : card));
         setPlayerHand(newHand);
-        setDiscardRounds(prev => prev + 1);
+        setDiscardsRemaining(prev => prev - 1);
     };
 
-    const openPopup = () => setIsPopupOpen(true);
-    const closePopup = () => setIsPopupOpen(false);
-
     return {
-        deck,
-        playerHand,
-        discardRounds,
-        handsRemaining,
-        isPopupOpen,
-        isDealing,
         dealCards,
-        toggleCardSelection,
+        deck,
         discardAndDeal,
-        openPopup,
-        closePopup,
+        discardsRemaining,
+        handResult,
+        handsRemaining,
+        isDealing,
         maxDiscardRounds,
-        evaluateHand,
+        playerHand,
+        score,
+        submitHand,
+        toggleCardSelection,
     };
 };
