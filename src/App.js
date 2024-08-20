@@ -5,17 +5,17 @@ import "./App.css";
 // Card deck setup
 const suits = ["spades", "hearts", "diamonds", "clubs"];
 const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
-const faceCardToImgID = {"A": 1, 'J': 11, 'Q': 12, 'K': 13}
+const faceCardToImgID = { "A": 1, 'J': 11, 'Q': 12, 'K': 13 }
 
 
 const createDeck = () => {
   let deck = [];
   for (let suit of suits) {
     for (let rank of ranks) {
-       deck.push({ rank: rank, suit: suit, image: `/images/card-${suit}-${faceCardToImgID[rank] || rank}.png` });
+      deck.push({ rank: rank, suit: suit, image: `/images/card-${suit}-${faceCardToImgID[rank] || rank}.png` });
     }
   }
-    return shuffleDeck(deck);
+  return shuffleDeck(deck);
 };
 
 // Fisher-Yates shuffle algorithm
@@ -46,7 +46,7 @@ const evaluateHand = (hand) => {
 
     rankCounts[rank] = (rankCounts[rank] || 0) + 1;
     suitCounts[suit] = (suitCounts[suit] || 0) + 1;
- rankValues.push(getRankValue(rank));
+    rankValues.push(getRankValue(rank));
   }
 
   rankValues.sort((a, b) => a - b);
@@ -68,11 +68,11 @@ const evaluateHand = (hand) => {
   return "High Card";
 };
 
-const Card = ({ card, onClick, isSelected }) => (
+const Card = ({ card, index, isDealing, isSelected, onClick }) => (
   <div
-    className={`card ${isSelected ? "selected" : ""}`}
-    style={{ backgroundImage: `url(${card.image})` }}
+    className={`card ${isSelected ? "selected" : ""} ${isDealing ? "dealing" : ""}`}
     onClick={onClick}
+    style={{ backgroundImage: `url(${card.image})`, animationDelay: `${index * 0.2}s` }}
   />
 );
 
@@ -90,18 +90,24 @@ const App = () => {
   const [discardRounds, setDiscardRounds] = useState(0);
   const [handsRemaining, setHandsRemaining] = useState(4);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isDealing, setIsDealing] = useState(false);
   const maxDiscardRounds = 3;
 
   useEffect(() => {
     setDeck(createDeck());
   }, []);
 
- const dealCards = () => {
+  const dealCards = () => {
     if (handsRemaining > 0) {
       setDeck(createDeck());
       setPlayerHand(deck.slice(0, 5).map(card => ({ ...card, selected: false })));
       setDiscardRounds(0);
       setHandsRemaining(handsRemaining - 1);
+
+      // Trigger dealing animation
+      setIsDealing(true);
+      setTimeout(() => setIsDealing(false), 1000); // Assuming the animation lasts 1 second
+
     }
   };
 
@@ -119,24 +125,23 @@ const App = () => {
     setDiscardRounds(prev => prev + 1);
   };
 
-    const openPopup = () => {
-      console.log('clicked')
-      setIsPopupOpen(true)
-    }
+  const openPopup = () => setIsPopupOpen(true)
   const closePopup = () => setIsPopupOpen(false);
 
   const renderHand = () => (
     playerHand.map((card, index) => (
       <Card
-        key={index}
         card={card}
-        onClick={() => toggleCardSelection(index)}
+        key={index}
+        index={index}
+        isDealing={isDealing}
         isSelected={card.selected}
+        onClick={() => toggleCardSelection(index)}
       />
     ))
   );
 
- return (
+  return (
     <div id="game-container">
       <div id="left-panel">
         <button onClick={dealCards} disabled={handsRemaining <= 0}>

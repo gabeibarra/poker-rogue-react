@@ -7,7 +7,7 @@ const ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
 
 const CardPopup = ({ isOpen, onClose, remainingDeck }) => {
   if (!isOpen) return null;
-                                                                                                                                   const groupedCards = suits.reduce((acc, suit) => {
+  const groupedCards = suits.reduce((acc, suit) => {
     acc[suit] = remainingDeck.filter(card => card.suit === suit);
     return acc;
   }, {});
@@ -17,7 +17,7 @@ const CardPopup = ({ isOpen, onClose, remainingDeck }) => {
       <div className="popup-content" onClick={e => e.stopPropagation()}>
         <button className="popup-close" onClick={onClose}>Close</button>
 
-         {suits.map(suit => (
+        {suits.map(suit => (
           <div key={suit} className="suit-group">
             <h3>{suit.charAt(0).toUpperCase() + suit.slice(1)}</h3>
             <div className="card-grid">

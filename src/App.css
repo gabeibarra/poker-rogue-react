@@ -10,7 +10,7 @@ body {
 }
 
 #game-container {
-  display: flex;
+    display: flex;
     text-align: center;
 }
 
@@ -52,34 +52,55 @@ body {
     box-shadow: 0 2px 0 #c31d33, 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-#round-info, #hands-remaining {
+#round-info,
+#hands-remaining {
     margin-top: 10px;
     font-size: 18px;
 }
 
 
 #player-hand {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
     margin: 20px 0;
 }
 
 .card {
     display: inline-block;
-    margin: 0 5px;
+    margin: 0 10px;
     width: 100px;
     height: 150px;
     background-size: cover;
+    background-position: center;
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     cursor: pointer;
+    opacity: 1;
     position: relative;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card.selected {
     transform: translateY(-32px);
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+}
+
+.card.dealing {
+    animation: deal 1s ease forwards;
+    transform: translateY(-500px) scale(0.2);
+    opacity: 0;
+}
+
+@keyframes deal {
+    0% {
+        transform: translateY(-500px) scale(0.2);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
 }
 
 .result {
@@ -103,7 +124,7 @@ body {
 #card-stack {
     width: 80px;
     height: 120px;
-    background-image: url('/public/images/card-back2.png'); /* Replace with your card back image path */
+    background-image: url('/public/images/card-back2.png');
     background-size: cover;
     box-shadow: 0 8px 0 #333, 0 0 20px rgba(0, 0, 0, 0.5);
     cursor: pointer;
@@ -117,7 +138,7 @@ body {
     left: 10px;
     width: 80px;
     height: 120px;
-    background-image: url('/public/images/card-back2.png'); /* Replace with your card back image path */
+    background-image: url('/public/images/card-back2.png');
     background-size: cover;
     transform: translateY(10px);
     z-index: -1;
@@ -130,9 +151,8 @@ body {
     left: 20px;
     width: 80px;
     height: 120px;
-    background-image: url('/public/images/card-back2.png'); /* Replace with your card back image path */
+    background-image: url('/public/images/card-back2.png');
     background-size: cover;
     transform: translateY(20px);
     z-index: -2;
 }
-
